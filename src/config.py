@@ -28,6 +28,19 @@ def _read_settings() -> dict:
 class Settings:
     """All configuration for the app, merged from env + settings.json."""
 
+    @staticmethod
+    def _resolve_credentials_path(path: str) -> str:
+        """Fall back to Render's /etc/secrets mount if the path doesn't exist.
+
+        Render mounts Secret Files (e.g. the service-account JSON) at
+        /etc/secrets/<filename>. If GOOGLE_CREDENTIALS_PATH points at a
+        basename that isn't present on disk, look for it there instead.
+        """
+        if os.path.exists(path):
+            return path
+        candidate = Path("/etc/secrets") / Path(path).name
+        return str(candidate) if candidate.is_file() else path
+
     def __init__(self) -> None:
         file_settings = _read_settings()
         self.settings_file = file_settings
@@ -72,10 +85,12 @@ class Settings:
             "GOOGLE_CALENDAR_ID",
             file_settings.get("google_calendar_id", ""),
         ).strip()
-        self.google_credentials_path: str = os.getenv(
-            "GOOGLE_CREDENTIALS_PATH",
-            str(PROJECT_ROOT / "credentials" / "service-account.json"),
-        ).strip()
+        self.google_credentials_path: str = self._resolve_credentials_path(
+            os.getenv(
+                "GOOGLE_CREDENTIALS_PATH",
+                str(PROJECT_ROOT / "credentials" / "service-account.json"),
+            ).strip()
+        )
 
         # --- Google Calendar OAuth2 (user login — required to email attendees) ---
         # A bare service account cannot invite attendees on a personal Gmail

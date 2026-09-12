@@ -1804,6 +1804,10 @@ async def startup():
     log.info(f"Loaded {len(local_rag.rows)} FAQ rows")
     log.info(f"WhatsApp phone number ID: {settings.whatsapp_phone_number_id}")
     log.info(f"Clinic hotline: {settings.clinic_hotline}")
+    log.info(
+        f"Google credentials: {settings.google_credentials_path} "
+        f"(exists={Path(settings.google_credentials_path).is_file()})"
+    )
     if not settings.screening_form_url:
         log.warning("SCREENING_FORM_URL is empty - form step will be skipped in messages")
     if not settings.upi_id:
