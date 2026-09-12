@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>KayaKalp WhatsApp Chatbot — Flow Diagram</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    background: #F5F4EF;
+    color: #2C2C2A;
+    margin: 0;
+    padding: 40px 20px 80px;
+  }
+  h1 {
+    text-align: center;
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+  .subtitle {
+    text-align: center;
+    color: #5F5E5A;
+    font-size: 14px;
+    margin-bottom: 40px;
+  }
+  .section {
+    max-width: 760px;
+    margin: 0 auto 48px;
+  }
+  .section-title {
+    font-size: 15px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #712B13;
+    background: #FAECE7;
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: 6px;
+    margin-bottom: 18px;
+  }
+  .flow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .row {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    width: 100%;
+    flex-wrap: wrap;
+  }
+  .box {
+    background: #fff;
+    border: 1px solid #D3D1C7;
+    border-radius: 10px;
+    padding: 12px 18px;
+    min-width: 180px;
+    max-width: 220px;
+    text-align: center;
+    font-size: 13.5px;
+    line-height: 1.45;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+  }
+  .box.patient {
+    background: #E6F1FB;
+    border-color: #85B7EB;
+  }
+  .box.bot {
+    background: #E1F5EE;
+    border-color: #5DCAA5;
+  }
+  .box.doctor {
+    background: #FAEEDA;
+    border-color: #EF9F27;
+  }
+  .box.end {
+    background: #EAF3DE;
+    border-color: #97C459;
+    font-weight: 600;
+  }
+  .box.warn {
+    background: #FCEBEB;
+    border-color: #F09595;
+  }
+  .box .tag {
+    display: block;
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: #5F5E5A;
+    margin-bottom: 4px;
+    font-weight: 600;
+  }
+  .arrow {
+    color: #888780;
+    font-size: 18px;
+    line-height: 1;
+    margin: 4px 0;
+  }
+  .branch-label {
+    font-size: 11.5px;
+    color: #5F5E5A;
+    font-style: italic;
+    margin-bottom: 2px;
+  }
+  .branches {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    width: 100%;
+    margin-top: 4px;
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
+  .branch {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    min-width: 200px;
+    max-width: 240px;
+  }
+  .note {
+    max-width: 760px;
+    margin: 0 auto 40px;
+    font-size: 12.5px;
+    color: #5F5E5A;
+    background: #fff;
+    border-left: 3px solid #B4B2A9;
+    padding: 10px 16px;
+    border-radius: 0 6px 6px 0;
+  }
+  .legend {
+    max-width: 760px;
+    margin: 0 auto 40px;
+    display: flex;
+    gap: 24px;
+    justify-content: center;
+    flex-wrap: wrap;
+    font-size: 12.5px;
+  }
+  .legend-item { display: flex; align-items: center; gap: 6px; }
+  .swatch { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
+  hr.divider {
+    max-width: 760px;
+    margin: 0 auto 40px;
+    border: none;
+    border-top: 1px dashed #D3D1C7;
+  }
+</style>
+</head>
+<body>
+
+<h1>KayaKalp WhatsApp chatbot — full flow</h1>
+<div class="subtitle">Every path a patient can take, end to end</div>
+
+<div class="legend">
+  <div class="legend-item"><span class="swatch" style="background:#E6F1FB;border:1px solid #85B7EB"></span> Patient message</div>
+  <div class="legend-item"><span class="swatch" style="background:#E1F5EE;border:1px solid #5DCAA5"></span> Bot message</div>
+  <div class="legend-item"><span class="swatch" style="background:#FAEEDA;border:1px solid #EF9F27"></span> Doctor action</div>
+  <div class="legend-item"><span class="swatch" style="background:#EAF3DE;border:1px solid #97C459"></span> Outcome</div>
+  <div class="legend-item"><span class="swatch" style="background:#FCEBEB;border:1px solid #F09595"></span> Fallback / alert</div>
+</div>
+
+<!-- WELCOME -->
+<div class="section">
+  <div class="section-title">1. Welcome</div>
+  <div class="flow">
+    <div class="box patient"><span class="tag">Patient</span>Says "Hi" or anything</div>
+    <div class="arrow">↓</div>
+    <div class="box bot"><span class="tag">Bot</span>Welcome message — offers to book, ask questions, or share reports</div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- BOOKING -->
+<div class="section">
+  <div class="section-title">2. Booking</div>
+0  <div class="flow">
+    <div class="box patient"><span class="tag">Patient</span>Types "book"</div>
+    <div class="arrow">↓</div>
+    <div class="box bot"><span class="tag">Bot</span>Choose service: Weight Management / Skin Care / General Consultation</div>
+    <div class="arrow">↓</div>
+    <div class="box bot"><span class="tag">Bot</span>Collects name, date, time slot</div>
+    <div class="arrow">↓</div>
+
+    <div class="branches">
+      <div class="branch">
+        <div class="branch-label">Skin Care / General</div>
+        <div class="box bot"><span class="tag">Bot</span>Confirms details, sends payment link</div>
+        <div class="arrow">↓</div>
+        <div class="box patient"><span class="tag">Patient</span>Pays</div>
+        <div class="arrow">↓</div>
+        <div class="box end">Appointment finalized — welcome PDF sent</div>
+      </div>
+
+      <div class="branch">
+        <div class="branch-label">Weight Management</div>
+        <div class="box bot"><span class="tag">Bot</span>Collects email, sends for doctor approval</div>
+        <div class="arrow">↓</div>
+        <div class="box doctor"><span class="tag">Doctor</span>Approves or rejects (auto-approve after 10 min)</div>
+        <div class="arrow">↓</div>
+        <div class="box bot"><span class="tag">Bot</span>Sends intake form, then payment link</div>
+        <div class="arrow">↓</div>
+        <div class="box patient"><span class="tag">Patient</span>Fills form, pays</div>
+        <div class="arrow">↓</div>
+        <div class="box end">Appointment finalized — calendar invite + PDF sent</div>
+      </div>
+
+      <div class="branch">
+        <div class="branch-label">Weight Loss Program</div>
+        <div class="box bot"><span class="tag">Bot</span>Choose plan: Essential / Premium / Elite</div>
+        <div class="arrow">↓</div>
+        <div class="box patient"><span class="tag">Patient</span>Fills enrollment form, pays</div>
+        <div class="arrow">↓</div>
+        <div class="box end">Enrollment complete — program PDF sent, team follows up</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- PAYMENT REMINDERS -->
+<div class="section">
+  <div class="section-title">3. If payment isn't completed</div>
+  <div class="flow">
+    <div class="box bot"><span class="tag">Bot</span>Reminder after 24 hours</div>
+    <div class="arrow">↓</div>
+    <div class="box bot"><span class="tag">Bot</span>Reminder after 3 days</div>
+    <div class="arrow">↓</div>
+    <div class="box warn"><span class="tag">Bot</span>Final reminder after 7 days</div>
+    <div class="arrow">↓</div>
+    <div class="box warn"><span class="tag">Bot</span>Booking auto-cancelled — doctor notified to follow up manually</div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- FAQ -->
+<div class="section">
+  <div class="section-title">4. Asking questions (FAQ)</div>
+  <div class="flow">
+    <div class="box patient"><span class="tag">Patient</span>Asks about treatments, pricing, or timings</div>
+    <div class="arrow">↓</div>
+    <div class="box bot"><span class="tag">Bot</span>Answers from clinic FAQ knowledge base, adds "consult a doctor" note where medical</div>
+    <div class="arrow">↓</div>
+    <div class="box end">Offers to connect with the team for anything further</div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- REPORTS -->
+<div class="section">
+  <div class="section-title">5. Sending a report</div>
+  <div class="flow">
+    <div class="box patient"><span class="tag">Patient</span>Sends a photo or PDF of a lab report</div>
+    <div class="arrow">↓</div>
+    <div class="box bot"><span class="tag">Bot</span>Reads the report and summarizes key values in plain language</div>
+    <div class="arrow">↓</div>
+    <div class="box warn">Always reminds the patient to consult a doctor for medical decisions</div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- EDGE CASES -->
+<div class="section">
+  <div class="section-title">6. Edge cases</div>
+  <div class="branches">
+    <div class="branch">
+      <div class="branch-label">Already has a booking</div>
+      <div class="box patient"><span class="tag">Patient</span>Tries to book again</div>
+      <div class="arrow">↓</div>
+      <div class="box warn"><span class="tag">Bot</span>Flags the existing booking, directs to the team for changes</div>
+    </div>
+    <div class="branch">
+      <div class="branch-label">Unknown question</div>
+      <div class="box patient"><span class="tag">Patient</span>Asks something outside the bot's knowledge</div>
+      <div class="arrow">↓</div>
+      <div class="box warn"><span class="tag">Bot</span>Apologizes, shares the clinic's contact number directly</div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,31 @@
+# Kaya — KayaKalp Clinic WhatsApp AI Assistant
+# Install with: pip install -r requirements.txt
+
+# --- Web server (webhook) ---
+fastapi>=0.115.0
+uvicorn[standard]>=0.30.0
+
+# --- Google Gemini (image/document analysis + RAG embeddings) ---
+# Used for: (1) image/PDF analysis with Gemini 3.1 Flash Lite, (2) FAQ embeddings
+# with gemini-embedding-001 (3072-dim). Replaces the deprecated
+# google-generativeai package.
+google-genai>=0.1.0
+
+# --- HTTP client (OpenRouter API calls for RAG answer drafting) ---
+httpx>=0.27.0
+
+# --- Vector database (free, local, persistent) ---
+# ChromaDB stores FAQ embeddings for semantic search.
+chromadb>=1.0.0
+
+# --- Google Calendar API (JWT service account auth) ---
+cryptography>=42.0.0
+
+# --- Excel FAQ parsing (build-time only) ---
+openpyxl>=3.1.0
+
+# --- Configuration ---
+python-dotenv>=1.0.0
+
+# --- Utilities ---
+python-multipart>=0.0.9
