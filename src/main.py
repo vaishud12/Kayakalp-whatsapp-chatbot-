@@ -26,6 +26,7 @@ import hmac
 import json
 import logging
 import re
+import time
 import uuid
 from datetime import datetime, timezone
 from pathlib import Path
@@ -49,6 +50,22 @@ logging.basicConfig(level=logging.INFO)
 log = logging.getLogger("kaya")
 
 app = FastAPI(title="Kaya — Kayakalp WhatsApp Assistant", version="0.3.0")
+
+# Dedup guard against Meta webhook retries / replays. Meta can redeliver the
+# same message (same mid) more than once; without this the bot double-sends.
+_processed_mids: dict[str, float] = {}
+_MID_TTL_SECONDS = 600.0
+
+
+def _first_time_seen(mid: str) -> bool:
+    now = time.monotonic()
+    for m in list(_processed_mids):
+        if now - _processed_mids[m] > _MID_TTL_SECONDS:
+            del _processed_mids[m]
+    if mid in _processed_mids:
+        return False
+    _processed_mids[mid] = now
+    return True
 
 
 @app.exception_handler(Exception)
@@ -1338,6 +1355,11 @@ async def receive_message(request: Request) -> Response:
     if not wa_id:
         return JSONResponse({"status": "ok"})
 
+    mid = msg.get("id", "")
+    if mid and not _first_time_seen(mid):
+        log.info(f"Duplicate webhook ignored (mid={mid})")
+        return JSONResponse({"status": "ok"})
+
     log.info(f"Message from {wa_id}: type={msg_type}")
 
     # Extract text and reply_id based on message type
@@ -1505,15 +1527,6 @@ async def receive_message(request: Request) -> Response:
                     except Exception:
                         pass
                     return JSONResponse({"status": "ok"})
-
-            # Send clickable website CTA when welcome message is shown
-            website_payload = result.get("websitePayload")
-            if website_payload:
-                website_payload["to"] = wa_id
-                try:
-                    await whatsapp_client.send_message(website_payload)
-                except Exception as e:
-                    log.error(f"Failed to send website CTA to {wa_id}: {e}")
 
             # 3. If booking confirmed, start doctor approval flow
             if result.get("submit"):

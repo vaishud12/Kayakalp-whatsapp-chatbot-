@@ -62,7 +62,7 @@ def get_welcome_message() -> str:
         "🔹 *Ask your queries* — Get answers about treatments, GLP-1, pricing, or appointments\n"
         "🔹 *Weight Loss Programs* — Clinical Expert Supervision, Precision Nutrition, or "
         "The Total Transformation Elite\n\n"
-        f"🌐 *Visit our website:* <{website_url}>\n\n"
+        f"🌐 *Visit our website:* {website_url}\n\n"
         "✨ *\"The best time to start your wellness journey is today.\"*\n\n"
         "We're here to help you achieve your health and beauty goals!\n"
     )
@@ -425,7 +425,6 @@ def process_message(
         full_name = service = appt_date = appt_time = email = ""
         enroll_plan = None
         payload = _button_msg(to, get_welcome_message(), MENU_BUTTONS)
-        website_payload = _website_cta_payload(to, settings.website_url or "https://kayakalp.in")
 
     # FAQ button tap (faq_xxx)
     elif reply_id.startswith("faq_"):
@@ -455,7 +454,6 @@ def process_message(
         else:
             new_step = "await_menu"
             payload = _button_msg(to, get_welcome_message(), MENU_BUTTONS)
-            website_payload = _website_cta_payload(to, settings.website_url or "https://kayakalp.in")
 
     # AWAIT MENU
     elif step == "await_menu":

@@ -18,7 +18,7 @@ dist/
 build/
 
 # =============================================================================
-# ChromaDB / RAG local store (generated at runtime — do not commit)
+# ChromaDB / RAG local store (generated at deploy time — do not commit)
 # =============================================================================
 src/rag_store/
 
