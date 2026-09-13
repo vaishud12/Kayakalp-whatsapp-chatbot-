@@ -25,6 +25,9 @@ from src.config import settings
 # Message builders (mirrors n8n helpers)
 # ---------------------------------------------------------------------------
 
+# WhatsApp rejects list messages with more than 10 rows (HTTP 400).
+_WHATSAPP_LIST_ROW_LIMIT = 10
+
 def _text_msg(to: str, body: str) -> dict[str, Any]:
     return {
         "messaging_product": "whatsapp",
