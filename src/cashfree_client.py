@@ -21,7 +21,7 @@ from src.config import settings
 
 log = logging.getLogger("kaya.cashfree")
 
-API_VERSION = "2023-08-01"
+API_VERSION = "2026-01-01"
 
 
 def _api_base() -> str:
@@ -80,7 +80,13 @@ async def create_payment_link(
             data = resp.json()
             return {"link_url": data.get("link_url", ""), "link_id": data.get("link_id", link_id)}
     except Exception as e:
-        log.error(f"Cashfree create_payment_link failed: {e}")
+        response_text = getattr(e, "response", None)
+        response_body = getattr(response_text, "text", "")
+        log.error(
+            f"Cashfree create_payment_link failed: {e} | "
+            f"status={getattr(response_text, 'status_code', '')} | "
+            f"response={response_body[:1000]}"
+        )
         return None
 
 
